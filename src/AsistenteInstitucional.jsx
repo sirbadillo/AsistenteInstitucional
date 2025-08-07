@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -82,8 +81,8 @@ export default function AsistenteInstitucional() {
 
   return (
     <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem' }}>
-      <Card>
-        <CardContent>
+      <div>
+        
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>🤖 Asistente Institucional UCM</h2>
           <div style={{ height: '300px', overflowY: 'auto', background: '#f1f1f1', padding: '1rem', borderRadius: '8px' }}>
             {messages.map((msg, idx) => (
@@ -108,8 +107,8 @@ export default function AsistenteInstitucional() {
             />
             <Button onClick={handleSend}>Enviar</Button>
           </div>
-        </CardContent>
-      </Card>
+        
+      </div>
     </div>
   );
 }
