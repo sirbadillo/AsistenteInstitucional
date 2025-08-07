@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -32,6 +31,9 @@ export default function AsistenteInstitucional() {
     }
   };
 
+  // 🔤 Función para eliminar tildes
+  const normalizar = (texto) => texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
   const handleSend = () => {
     if (!input.trim()) return;
 
@@ -43,17 +45,17 @@ export default function AsistenteInstitucional() {
   };
 
   const getSimulatedResponse = (input) => {
-    const lower = input.toLowerCase();
+    const lower = normalizar(input.toLowerCase());
     const añoMatch = lower.match(/20\d{2}/);
     const año = añoMatch ? añoMatch[0] : null;
 
     if (año) {
-      if (lower.includes("matrícula") || lower.includes("ingresaron")) {
+      if (lower.includes("matricula") || lower.includes("ingresaron")) {
         const val = datosPorAño.matricula[año];
         return val
           ? { role: "asistente", content: `En ${año}, ingresaron aproximadamente ${val.toLocaleString()} estudiantes nuevos en modalidad presencial.` }
           : { role: "asistente", content: `No tengo datos de matrícula disponibles para el año ${año}.` };
-      } else if (lower.includes("retención")) {
+      } else if (lower.includes("retencion")) {
         const val = datosPorAño.retencion[año];
         return val
           ? { role: "asistente", content: `La tasa de retención al segundo año en ${año} fue de ${val}%.` }
@@ -63,12 +65,12 @@ export default function AsistenteInstitucional() {
         return val
           ? { role: "asistente", content: `En ${año}, egresaron ${val.toLocaleString()} estudiantes de programas de pregrado.` }
           : { role: "asistente", content: `No tengo datos de egresos para el año ${año}.` };
-      } else if (lower.includes("titulación") || lower.includes("titularon")) {
+      } else if (lower.includes("titulacion") || lower.includes("titularon")) {
         const val = datosPorAño.titulacion[año];
         return val
           ? { role: "asistente", content: `La tasa de titulación oportuna para la cohorte de ${año} fue de ${val}%.` }
           : { role: "asistente", content: `No tengo datos de titulación para el año ${año}.` };
-      } else if (lower.includes("académico") || lower.includes("docente")) {
+      } else if (lower.includes("academico") || lower.includes("docente")) {
         const val = datosPorAño.academicos[año];
         return val
           ? { role: "asistente", content: `En ${año}, la UCM contó con ${val.toLocaleString()} académicos.` }
@@ -82,34 +84,31 @@ export default function AsistenteInstitucional() {
   return (
     <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem' }}>
       <div>
-        
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>🤖 Asistente Institucional UCM</h2>
-          <div style={{ height: '300px', overflowY: 'auto', background: '#f1f1f1', padding: '1rem', borderRadius: '8px' }}>
-            {messages.map((msg, idx) => (
-              <div key={idx} style={{ textAlign: msg.role === 'usuario' ? 'right' : 'left', marginBottom: '0.5rem' }}>
-                <span style={{
-                  display: 'inline-block',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '1rem',
-                  backgroundColor: msg.role === 'usuario' ? '#cce5ff' : '#d4edda'
-                }}>
-                  {msg.content}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-            <Input
-              placeholder="Escribe tu pregunta..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            />
-            <Button onClick={handleSend}>Enviar</Button>
-          </div>
-        
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>🤖 Asistente Institucional UCM</h2>
+        <div style={{ height: '300px', overflowY: 'auto', background: '#f1f1f1', padding: '1rem', borderRadius: '8px' }}>
+          {messages.map((msg, idx) => (
+            <div key={idx} style={{ textAlign: msg.role === 'usuario' ? 'right' : 'left', marginBottom: '0.5rem' }}>
+              <span style={{
+                display: 'inline-block',
+                padding: '0.5rem 1rem',
+                borderRadius: '1rem',
+                backgroundColor: msg.role === 'usuario' ? '#cce5ff' : '#d4edda'
+              }}>
+                {msg.content}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+          <Input
+            placeholder="Escribe tu pregunta..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+          />
+          <Button onClick={handleSend}>Enviar</Button>
+        </div>
       </div>
     </div>
   );
 }
-// Último cambio Brayan - despliegue limpio
